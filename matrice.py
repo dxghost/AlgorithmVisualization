@@ -42,7 +42,8 @@ def standardize(Mat):
 
 #Makes All elements nonnegetive
 def positify(Mat):
-    minimum = min([min(i) for i in Mat])
+    minimum = abs(min([min(i) for i in Mat]))
+    print(minimum)
     for i in Mat:
         for j in range(len(i)):
             i[j]+=minimum
@@ -163,8 +164,8 @@ def normalize(Mat):
                     i[j]=i[j][1:i[j].index(')')]
     return(Mat)
 
-#assigns zeros to rows which have only one zero and acquires the job
-def assign(Mat):
+#deletes the possiblity to acquire for other workers
+def acquire(Mat,j):
     rmat=turn_by_90(Mat)
     for i in rmat:
         if '%' in i:
@@ -172,15 +173,21 @@ def assign(Mat):
                 if i[j]=='0':
                     i[j]='N'
     mat=turn_by_90(rmat)
-    Show(Mat)
+    Show(mat)
+    return(mat)
+
+#assigns zeros to rows which have only one zero and acquires the job
+def assign(Mat):
+    mat=Mat
     for i in mat:
         if i.count('0')==1:
             for j in range(len(i)):
                 if i[j]=='0':
                     i[j]='%'
-            Show(Mat)
+                    mat = acquire(mat,j)
+            Show(mat)
             assign(mat)
-    Show(Mat)
+
     return(mat)
 
 #picks a job for a worker which has a dillema :)
@@ -197,7 +204,7 @@ def pick(Mat):
     if a!='@':
         for i in range(len(Mat[a])):
             if Mat[a][i]=='0':
-                Mat[a][i]='N'
+                Mat[a][i]='U'
     Show(Mat)
     return(Mat)
 
